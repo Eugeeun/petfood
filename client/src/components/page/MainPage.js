@@ -1,10 +1,9 @@
-import styled from 'styled-components';
-const GameList = styled.div`
-  font-size: 50px;
-`;
+import React from 'react'
 
-function MainPage(props) {
-  return <GameList></GameList>;
+function MainPage() {
+  return (
+    <div>MainPage</div>
+  )
 }
 
-export default MainPage;
+export default MainPage
