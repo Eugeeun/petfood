@@ -16,7 +16,6 @@ const Page = styled.div`
   width: 100%;
   max-width: 500px;
   padding: 0 20px;
-  
 
   left: 50%;
   transform: translate(-50%, 0);
@@ -35,6 +34,7 @@ const TitleWrap = styled.div`
 `;
 const ContentWrap = styled.div`
   flex: 1;
+  margin: 0 30px;
 `;
 const InputTitle = styled.div`
   margin-top: 30px;
@@ -183,14 +183,14 @@ function SignUpPage() {
         <InputWrap>
           <Input/>
         </InputWrap>
+
+        <div>
+          <BottomButton
+          onClick={onClickConfirmButton} 
+          disabled={notAllow}>확인</BottomButton>
+        </div>
+
       </ContentWrap>
-
-
-      <div>
-        <BottomButton
-        onClick={onClickConfirmButton} 
-        disabled={notAllow}>확인</BottomButton>
-      </div>
     </Page>
   );
 }

@@ -33,6 +33,7 @@ const TitleWrap = styled.div`
 `;
 const ContentWrap = styled.div`
   flex: 1;
+  margin: 0 30px;
 `;
 const InputTitle = styled.div`
   margin-top: 30px;
@@ -185,17 +186,19 @@ function LogInPage() {
             <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
           )}
         </ErrorMessageWrap>
+      
+
+        <div>
+          <BottomButton
+          onClick={onClickConfirmButton} 
+          disabled={notAllow}>확인</BottomButton>
+        </div>
+
+        <GoToSignUP>
+          <NavLink to='/signup'>회원가입 하러 가기</NavLink>
+        </GoToSignUP>
+
       </ContentWrap>
-
-      <div>
-        <BottomButton
-        onClick={onClickConfirmButton} 
-        disabled={notAllow}>확인</BottomButton>
-      </div>
-
-      <GoToSignUP>
-        <NavLink to='/signup'>회원가입 하러 가기</NavLink>
-      </GoToSignUP>
       
     </Page>
   );

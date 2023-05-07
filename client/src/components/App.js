@@ -1,13 +1,12 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import styled from "styled-components";
-// 로고 이미지 경로
-import logoImg from './image/logo.png';
-// Pages
+
 import MainPage from './page/MainPage';
 import LogInPage from './page/LogInPage';
 import SignUpPage from "./page/SignUpPage";
 import MyPage from "./page/MyPage";
+import GamePage from "./page/GamePage";
 
 const MainHeader = styled.div`
   display: flex;
@@ -25,7 +24,6 @@ const Logo = styled.div`
 
 const LogoImg = styled.img`
   height: 100%;
-  
 `;
 
 const Title = styled.h1`
@@ -78,7 +76,7 @@ function App(props) {
       <MainHeader>
         <Logo>
           <Link to="/">
-              <LogoImg src={logoImg} alt="로고" />
+              <LogoImg src="/image/logo.png" alt="로고" />
           </Link>
         </Logo>
         <Title>Pet Food</Title>
@@ -94,6 +92,7 @@ function App(props) {
         <Route path="login" element={<LogInPage />} />
         <Route path="signup" element={<SignUpPage />} />
         <Route path="mypage" element={<MyPage />} />
+        <Route path="gamepage" element={<GamePage />} />
       </Routes>
     </BrowserRouter>
   );
