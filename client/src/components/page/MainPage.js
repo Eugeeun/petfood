@@ -23,7 +23,6 @@ const InputTitle = styled.div`
   margin-bottom: 20px;
   color: navy;
 `;
-
 const FormGroup = styled.div`
   display: inline-flex;
   flex-direction: column;
@@ -48,8 +47,34 @@ const FormGroup = styled.div`
       color: #dadada;
     }
     &:focus {
-      outline: none; /* 포커스 스타일 제거 */
+      outline: none;
       border: 2px solid #646EFF;
+    }
+  }
+
+  //모바일 환경 또는 가로폭이 1000px 이하로 줄어들면 밑에 css로 적용
+  @media screen and (max-width: 1000px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 30px;
+    margin-bottom: 40px;
+
+    input {
+      outline: none;
+      border-radius: 8px;
+      border: 1px solid #bebebe;
+      width: 100%;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 400;
+      &::placeholder {
+        color: #dadada;
+      }
+      &:focus {
+        outline: none;
+        border: 2px solid #646EFF;
+      }
     }
   }
 `;
@@ -65,12 +90,17 @@ const SubmitButton = styled.button`
   background-color: #646EFF;
   color: #FFFFFF;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   
   &:disabled{
     background-color: #dadada;
     color: #FFFFFF;
+  }
+
+  @media screen and (max-width: 1000px) {
+    width: 100%;
+    height: 40px;
   }
 `;
 
