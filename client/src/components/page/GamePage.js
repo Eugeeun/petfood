@@ -16,52 +16,64 @@ const Page = styled.div`
 
 const TitleWrap = styled.div`
   margin-top: 50px;
+  weight: 500px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  margin: 20px 20px 5px 20px;
+  img { 
+    width: 100%;
+  }
+`;
+
+const Content = styled.div`
+  height: 400px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 20px;
+`;
+
+const FoodName = styled.div`
   font-size: 26px;
   font-weight: 700;
   color: navy;
   text-align: center;
-`;
 
-const Content = styled.div`
-  height: 500px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 20px;
+  span {
+    color: red;
+  }
 `;
 
 const Answer = styled.div`
-  height: 100px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 20px;
+  height: 80px;
+  margin: 20px 20px 100px 20px;
   display: flex;
-  justify-content: center;
   
-  div {
+  button {
     font-size: 40px;
-    font-weight: 600;
+    font-weight: 500;
     flex: 1;
-    text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
-  }
+    align-items:center;
+    
+    span{
+      font-weight: 800;
+    }
 
-  div:not(:last-child) {
-    margin-right: 10px;
   }
 `;
 
-// 강아지인지 고양이인지 선ㄴ택...
+// 강아지인지 고양이인지 선택...?
 function GamePage() {
   return (
     <Page>
-      <TitleWrap>반려동물 음식 OX 퀴즈</TitleWrap>
+      <TitleWrap><img src="/image/quizbanner.png" alt="로고" /></TitleWrap>
       <Content>사진?</Content>
+      <FoodName><span>'음식명'</span> 섭취 가능 여부</FoodName>
       <Answer>
-        <div>O</div>
-        <div>△</div>
-        <div>X</div>
+        <button>O</button>
+        <button><span>△</span></button>
+        <button>X</button>
       </Answer>
     </Page>
   )
