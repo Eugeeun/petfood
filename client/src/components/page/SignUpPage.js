@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled from "styled-components";
-import { useNavigate } from 'react-router-dom'; 
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import Axios from 'axios';
 
 //라우트 코드 경로로 이동하기 위해 라이브러리 추가
 
 //임시 더미 데이터
 const User = {
-  id : 'qwer1234',
-  pw : 'qwer1234!'
-}
+  id: 'qwer1234',
+  pw: 'qwer1234!',
+};
 
 const Page = styled.div`
   position: absolute;
@@ -44,7 +45,7 @@ const InputTitle = styled.div`
 `;
 
 const Explain = styled.span`
-  color: red;  
+  color: red;
 `;
 
 const InputWrap = styled.div`
@@ -87,71 +88,104 @@ const BottomButton = styled.button`
   margin-top: 40px;
   margin-bottom: 100px; //밑에좀 키우기
   cursor: pointer;
-  &:disabled{
+  &:disabled {
     background-color: #dadada;
     color: white;
   }
 `;
 
-
 function SignUpPage() {
   const [id, setId] = useState(''); //아이디 스테이트 생성 및 초기화
   const [pw, setPw] = useState('');
+  const [petName, setPetName] = useState('');
+  const [breed, setBreed] = useState('');
 
   //스테이트값 반환
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(false);
+  const [breedValid, setBreedValid] = useState(true);
 
   const handleId = (e) => {
     setId(e.target.value);
     const regex = /^[a-zA-Z0-9]{8,}$/; // 8자 이상의 유효한 패턴으로 정규표현식 생성
-    if (regex.test(e.target.value)) { // 입력된 값이 패턴에 맞는지 검사
+    if (regex.test(e.target.value)) {
+      // 입력된 값이 패턴에 맞는지 검사
       setIdValid(true);
     } else {
       setIdValid(false);
     }
-  }
+  };
 
   const handlePassword = (e) => {
     setPw(e.target.value);
-    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
-    if (regex.test(e.target.value)) { // 입력된 값이 패턴에 맞는지 검사
+    const regex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
+    if (regex.test(e.target.value)) {
+      // 입력된 값이 패턴에 맞는지 검사
       setPwValid(true);
     } else {
       setPwValid(false);
     }
-  }
+  };
+
+  const handlePetName = (e) => {
+    setPetName(e.target.value);
+  };
+
+  const handleBreed = (e) => {
+    setBreed(e.target.value);
+  };
 
   //id와 비밀번호의 스테이트의 값이 패턴에 맞는지 검사한 결과값이 true여야 버튼 활성화
-  useEffect(()=>{
-    if(idValid && pwValid) {
+  useEffect(() => {
+    if (idValid && pwValid) {
       setNotAllow(false);
-    }else {
+    } else {
       setNotAllow(true);
     }
-  },[idValid,pwValid])
+  }, [idValid, pwValid]);
 
   //버튼 클릭 이벤트 + useNavigate 함수를 통한 로그인 페이지로 이동함
   const navigate = useNavigate();
   const onClickConfirmButton = () => {
-    alert('회원가입에 성공하였습니다.');
-    navigate('/login');
-  }
+    const userInfo = {
+      id: id,
+      password: pw,
+      petName: petName,
+      breed: breed,
+    };
+
+    // 존재하는 품종명인지 확인
+    Axios.post('/api/breed', userInfo).then((response) => {
+      if (response.data.success) {
+        setBreedValid(true);
+        // 회원가입
+        Axios.post('/api/register', userInfo).then((response) => {
+          if (response.data.success) {
+            alert('회원가입에 성공하였습니다.');
+            navigate('/login');
+          }
+        });
+      } else {
+        setBreedValid(false);
+      }
+    });
+  };
 
   return (
     <Page>
-      <TitleWrap>
-        회원가입
-      </TitleWrap>
+      <TitleWrap>회원가입</TitleWrap>
       <ContentWrap>
-        <InputTitle>아이디 <Explain>(필수)</Explain></InputTitle>
+        <InputTitle>
+          아이디 <Explain>(필수)</Explain>
+        </InputTitle>
         <InputWrap>
-          <Input 
-          type='text'
-          placeholder='영문, 숫자 포함 8자 이상 입력해주세요'
-          value={id}
-          onChange={handleId}
+          <Input
+            type="text"
+            placeholder="영문, 숫자 포함 8자 이상 입력해주세요"
+            value={id}
+            onChange={handleId}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -160,13 +194,15 @@ function SignUpPage() {
           )}
         </ErrorMessageWrap>
 
-        <InputTitle>비밀번호 <Explain>(필수)</Explain></InputTitle>
+        <InputTitle>
+          비밀번호 <Explain>(필수)</Explain>
+        </InputTitle>
         <InputWrap>
-          <Input 
-          type='password'
-          placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요'
-          value={pw}
-          onChange={handlePassword}
+          <Input
+            type="password"
+            placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력해주세요"
+            value={pw}
+            onChange={handlePassword}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -174,22 +210,26 @@ function SignUpPage() {
             <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
           )}
         </ErrorMessageWrap>
-        <InputTitle>종</InputTitle>
+        <InputTitle>애왼동물명</InputTitle>
         <InputWrap>
-          <Input/>
+          <Input onChange={handlePetName} />
         </InputWrap>
 
         <InputTitle>품종명</InputTitle>
         <InputWrap>
-          <Input/>
+          <Input onChange={handleBreed} />
         </InputWrap>
+        <ErrorMessageWrap>
+          {!breedValid && breed.length > 0 && (
+            <div>존재하지 않는 품종입니다</div>
+          )}
+        </ErrorMessageWrap>
 
         <div>
-          <BottomButton
-          onClick={onClickConfirmButton} 
-          disabled={notAllow}>확인</BottomButton>
+          <BottomButton onClick={onClickConfirmButton} disabled={notAllow}>
+            확인
+          </BottomButton>
         </div>
-
       </ContentWrap>
     </Page>
   );
