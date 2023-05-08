@@ -23,3 +23,9 @@ module.exports = { connect };
 ### 테이블 수정 : user 테이블에 password 컬럼을 추가
 
 alter table user add password varchar(30) not null;
+
+## 22.05.08
+
+### 회원가입 구현 완료 : id, pw, 애완동물이름, 품종명 저장완료 품종명은 DB에 존재해야하므로 확인하고 저장
+
+참고사이트 [https://velog.io/@soshin_dev/ERRHTTPHEADERSSENT-Cannot-set-headers-after-they-are-sent-to-the-client-%EC%98%A4%EB%A5%98](https://velog.io/@soshin_dev/ERRHTTPHEADERSSENT-Cannot-set-headers-after-they-are-sent-to-the-client-%EC%98%A4%EB%A5%98)
