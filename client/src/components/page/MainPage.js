@@ -106,7 +106,7 @@ function MainPage() {
     setFoodName(event.target.value);
   };
   
-  //입력이 되어야 버튼 활성화
+  //입력이 되어야 버튼 활성화!
   useEffect(()=>{
     if(species.length > 0 && foodName.length > 0) {
       setNotAllow(false);
