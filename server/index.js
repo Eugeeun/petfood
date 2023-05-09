@@ -48,4 +48,21 @@ app.post('/api/petinfo', (req, res) => {
   });
 });
 
+app.post('/api/edibility', (req, res) => {
+  // 품종과 음식명이 같으면 섭취가능여부를 반환
+  const edibility = `select is_edibility from edibility where species = '${req.body.species}' and food_name = '${req.body.foodName}';`;
+  connect.query(edibility, (err, rows, fields) => {
+    if (err || rows.length === 0) res.json({ success: false });
+    else {
+      // 섭취여부를 판단하여 변수 설정
+      let isEdibility = null;
+      if (rows[0].is_edibility === 'o') isEdibility = '무해함';
+      else if (rows[0].is_edibility === 'x') isEdibility = '유해함';
+      else isEdibility = '적당량만 급여';
+
+      res.json({ success: true, isEdibility: isEdibility });
+    }
+  });
+});
+
 app.listen(PORT, () => console.log(`${PORT} listening!`));

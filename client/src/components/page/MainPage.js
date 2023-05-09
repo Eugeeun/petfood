@@ -120,6 +120,7 @@ function MainPage() {
   const [species, setSpecies] = useState('');
   const [breed, setBreed] = useState('');
   const [foodName, setFoodName] = useState('');
+
   //제출 버튼 입력하려면 종, 음식명 필수로 입력할 수 있게끔 스테이트값 반환
   const [notAllow, setNotAllow] = useState(false);
   const [result, setResult] = useState('');
@@ -155,7 +156,7 @@ function MainPage() {
         }
       });
     }
-  }, []);
+  }, [species, foodName]);
 
   const onClickButton = () => {};
 
@@ -164,8 +165,20 @@ function MainPage() {
     // 여기서 유해한지 무해한지 결과를 setResult 함수를 사용하여 저장합니다.
     // 이 코드는 예시로 "유해함" 혹은 "무해함" 중 무작위로 결과를 설정하는 코드입니다.
     // 유해함 적정량만 급여 무해함으로 변경ㅎㅐ야함 ...
-    const randomResult = Math.random() < 0.5 ? '유해함' : '무해함';
-    setResult(randomResult);
+
+    const searchData = {
+      species: species,
+      foodName: foodName,
+    };
+
+    Axios.post('/api/edibility', searchData).then((response) => {
+      // 종과 음식명이 존재한다면 그 결과값을 설정해줌
+      if (!response.data.success) {
+        setResult('알 수 없는 음식 또는 존재하지 않는 품종');
+        return;
+      }
+      setResult(response.data.isEdibility);
+    });
   };
 
   return (
