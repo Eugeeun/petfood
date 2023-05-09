@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import Axios from 'axios';
 
 const Page = styled.div`
   max-width: 1000px;
@@ -48,7 +49,7 @@ const FormGroup = styled.div`
     }
     &:focus {
       outline: none;
-      border: 2px solid #646EFF;
+      border: 2px solid #646eff;
     }
   }
 
@@ -73,7 +74,7 @@ const FormGroup = styled.div`
       }
       &:focus {
         outline: none;
-        border: 2px solid #646EFF;
+        border: 2px solid #646eff;
       }
     }
   }
@@ -81,21 +82,21 @@ const FormGroup = styled.div`
 
 const Explain = styled.span`
   font-size: 13px;
-  color: red;  
+  color: red;
 `;
 
 const SubmitButton = styled.button`
   height: 35px;
   width: 120px;
-  background-color: #646EFF;
-  color: #FFFFFF;
+  background-color: #646eff;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  
-  &:disabled{
+
+  &:disabled {
     background-color: #dadada;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 
   @media screen and (max-width: 1000px) {
@@ -109,14 +110,13 @@ const Content2 = styled.div`
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 20px 12px;
-  `;
+`;
 
 const BannerImg = styled.img`
   width: 100%;
 `;
 
 function MainPage() {
-  
   const [species, setSpecies] = useState('');
   const [breed, setBreed] = useState('');
   const [foodName, setFoodName] = useState('');
@@ -135,26 +135,35 @@ function MainPage() {
   const handleFoodNameChange = (event) => {
     setFoodName(event.target.value);
   };
-  
+
   //입력이 되어야 버튼 활성화!
-  useEffect(()=>{
-    if(species.length > 0 && foodName.length > 0) {
+  useEffect(() => {
+    if (species.length > 0 && foodName.length > 0) {
       setNotAllow(false);
-    }else {
+    } else {
       setNotAllow(true);
     }
-  });
 
-  const onClickButton = () => {
-    
-  }
+    const userId = { id: localStorage.getItem('id') };
+    if (userId.id) {
+      Axios.post('/api/petinfo', userId).then((response) => {
+        if (response.data.success) {
+          const petData = response.data.rows[0];
+          setBreed(petData.breed);
+          setSpecies(petData.species);
+        }
+      });
+    }
+  }, []);
+
+  const onClickButton = () => {};
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // 여기서 유해한지 무해한지 결과를 setResult 함수를 사용하여 저장합니다.
     // 이 코드는 예시로 "유해함" 혹은 "무해함" 중 무작위로 결과를 설정하는 코드입니다.
     // 유해함 적정량만 급여 무해함으로 변경ㅎㅐ야함 ...
-    const randomResult = Math.random() < 0.5 ? "유해함" : "무해함";
+    const randomResult = Math.random() < 0.5 ? '유해함' : '무해함';
     setResult(randomResult);
   };
 
@@ -164,42 +173,59 @@ function MainPage() {
         <form onSubmit={handleSubmit}>
           <InputTitle>반려동물 음식 유해도 검색</InputTitle>
           <FormGroup>
-            <label>종<Explain>(필수)</Explain></label>
-            <input type="text" 
-            placeholder=' 개'
-            value={species} onChange={handlespeciesChange} />
+            <label>
+              종<Explain>(필수)</Explain>
+            </label>
+            <input
+              type="text"
+              placeholder=" 개"
+              value={species}
+              onChange={handlespeciesChange}
+            />
           </FormGroup>
           <FormGroup>
             <label>품종명</label>
-            <input type="text" 
-            placeholder=' 웰시코기'
-            value={breed} onChange={handleBreedChange} />
+            <input
+              type="text"
+              placeholder=" 웰시코기"
+              value={breed}
+              onChange={handleBreedChange}
+            />
           </FormGroup>
           <FormGroup>
-            <label>음식명<Explain>(필수)</Explain></label>
-            <input type="text" 
-            placeholder=' 땅콩'
-            value={foodName} onChange={handleFoodNameChange} />
+            <label>
+              음식명<Explain>(필수)</Explain>
+            </label>
+            <input
+              type="text"
+              placeholder=" 땅콩"
+              value={foodName}
+              onChange={handleFoodNameChange}
+            />
           </FormGroup>
-          
+
           <FormGroup>
             <label></label>
-            <SubmitButton 
-            onClick={onClickButton} 
-            type="submit" disabled={notAllow}>제출</SubmitButton>
+            <SubmitButton
+              onClick={onClickButton}
+              type="submit"
+              disabled={notAllow}
+            >
+              제출
+            </SubmitButton>
           </FormGroup>
           <FormGroup>
             <label>결과</label>
             <input type="text" value={result} readOnly />
           </FormGroup>
         </form>
-    </Content1>
-      
-    <Content2>
-      <Link to="/gamepage">
-        <BannerImg src="/image/oxbanner.png" alt="로고" />
-      </Link>
-    </Content2>
+      </Content1>
+
+      <Content2>
+        <Link to="/gamepage">
+          <BannerImg src="/image/oxbanner.png" alt="로고" />
+        </Link>
+      </Content2>
     </Page>
   );
 }

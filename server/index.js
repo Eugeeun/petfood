@@ -39,4 +39,12 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+app.post('/api/petinfo', (req, res) => {
+  const userId = `select breed, species from specie where breed = (select breed from pet where user_id = '${req.body.id}');`;
+  connect.query(userId, (err, rows, fields) => {
+    if (err || rows.length === 0) res.json({ success: false });
+    else res.json({ success: true, rows });
+  });
+});
+
 app.listen(PORT, () => console.log(`${PORT} listening!`));
