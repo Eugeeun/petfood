@@ -161,9 +161,7 @@ function MainPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // 여기서 유해한지 무해한지 결과를 setResult 함수를 사용하여 저장합니다.
-    // 이 코드는 예시로 "유해함" 혹은 "무해함" 중 무작위로 결과를 설정하는 코드입니다.
-    // 유해함 적정량만 급여 무해함으로 변경ㅎㅐ야함 ...
+    // 여기서 임시로 유해한지 무해한지 결과를 setResult 함수를 사용하여 randomResult 저장
     const randomResult = Math.random() < 0.5 ? '유해함' : '무해함';
     setResult(randomResult);
   };
@@ -210,9 +208,7 @@ function MainPage() {
             <SubmitButton
               onClick={onClickButton}
               type="submit"
-              disabled={notAllow}
-            >
-              제출
+              disabled={notAllow}>제출
             </SubmitButton>
           </FormGroup>
           <FormGroup>

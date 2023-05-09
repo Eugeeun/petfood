@@ -63,17 +63,27 @@ const Answer = styled.div`
   }
 `;
 
-// 강아지인지 고양이인지 선택...?
 function GamePage() {
+
+  const onClickChoice_O = (e) => {
+    alert('정답입니다'); //임시
+  }
+  const onClickChoice_Tri = (e) => {
+    alert('정답입니다'); //임시
+  }
+  const onClickChoice_X = (e) => {
+    alert('정답입니다'); //임시
+  }
+
   return (
     <Page>
-      <TitleWrap><img src="/image/quizbanner.png" alt="로고" /></TitleWrap>
-      <Content>사진?</Content>
+      <TitleWrap><img src="/image/quizbanner.png" alt="배너" /></TitleWrap>
+      <Content>사진</Content>
       <FoodName><span>'음식명'</span> 섭취 가능 여부</FoodName>
       <Answer>
-        <button>O</button>
-        <button><span>△</span></button>
-        <button>X</button>
+        <button onClick={onClickChoice_O}>O</button>
+        <button onClick={onClickChoice_Tri}><span>△</span></button>
+        <button onClick={onClickChoice_X}>X</button>
       </Answer>
     </Page>
   )

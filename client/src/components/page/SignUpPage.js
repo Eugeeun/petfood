@@ -3,27 +3,9 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
-//라우트 코드 경로로 이동하기 위해 라이브러리 추가
-
-//임시 더미 데이터
-const User = {
-  id: 'qwer1234',
-  pw: 'qwer1234!',
-};
-
 const Page = styled.div`
-  position: absolute;
-  top: 100px; //배너때문에 100px부터 시작
-  width: 100%;
   max-width: 500px;
-  padding: 0 20px;
-
-  left: 50%;
-  transform: translate(-50%, 0);
-
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  margin: 50px auto;
 `;
 
 const TitleWrap = styled.div`
