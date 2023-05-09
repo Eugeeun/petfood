@@ -20,7 +20,7 @@ const Logo = styled.div`
   height: 100%;
   width: 33.3%;
   @media screen and (max-width: 1000px) {
-    width: 10%;
+    width: 30%;
   }
 `;
 
@@ -36,7 +36,8 @@ const Title = styled.h1`
   text-align: center;
   width: 33.3%;
   @media screen and (max-width: 1000px) {
-    width: 90%;
+    flex: none;
+    width: 40%;
   }
 `;
 
