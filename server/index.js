@@ -40,6 +40,7 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/petinfo', (req, res) => {
+  // 하위 질의문을 통해서 id를 가지고 애완동물의 품종을 찾고 그 품종의 종을 찾아서 반환
   const userId = `select breed, species from specie where breed = (select breed from pet where user_id = '${req.body.id}');`;
   connect.query(userId, (err, rows, fields) => {
     if (err || rows.length === 0) res.json({ success: false });

@@ -146,6 +146,7 @@ function MainPage() {
 
     const userId = { id: localStorage.getItem('id') };
     if (userId.id) {
+      // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 받아옴
       Axios.post('/api/petinfo', userId).then((response) => {
         if (response.data.success) {
           const petData = response.data.rows[0];
