@@ -30,7 +30,7 @@ app.post('/api/breed', (req, res) => {
   });
 });
 
-app.get('/api/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   // 아이디와 비밀번호가 일치하는지 확인
   const userInfo = `select * from user where user_id = '${req.body.id}' and password = '${req.body.password}';`;
   connect.query(userInfo, (err, rows, fields) => {

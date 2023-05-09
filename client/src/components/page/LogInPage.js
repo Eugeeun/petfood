@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import styled from "styled-components";
-import { Link } from 'react-router-dom';
-
-//임시 더미 데이터
-const User = {
-  id : 'qwer1234',
-  pw : 'qwer1234!'
-}
+import styled from 'styled-components';
+import { Link, useNavigate } from 'react-router-dom';
+import Axios from 'axios';
 
 const Page = styled.div`
   position: absolute;
@@ -14,7 +9,6 @@ const Page = styled.div`
   width: 100%;
   max-width: 500px;
   padding: 0 20px;
-  
 
   left: 50%;
   transform: translate(-50%, 0);
@@ -81,7 +75,7 @@ const BottomButton = styled.button`
   margin-top: 40px;
   margin-bottom: 20px;
   cursor: pointer;
-  &:disabled{
+  &:disabled {
     background-color: #dadada;
     color: white;
   }
@@ -102,7 +96,6 @@ const NavLink = styled(Link)`
   }
 `;
 
-
 function LogInPage() {
   const [id, setId] = useState(''); //아이디 스테이트 생성 및 초기화
   const [pw, setPw] = useState('');
@@ -112,58 +105,73 @@ function LogInPage() {
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleId = (e) => {
     setId(e.target.value);
     const regex = /^[a-zA-Z0-9]{8,}$/; // 8자 이상의 유효한 패턴으로 정규표현식 생성
-    if (regex.test(e.target.value)) { // 입력된 값이 패턴에 맞는지 검사
+    if (regex.test(e.target.value)) {
+      // 입력된 값이 패턴에 맞는지 검사
       setIdValid(true);
     } else {
       setIdValid(false);
     }
-  }
+  };
 
   const handlePassword = (e) => {
     setPw(e.target.value);
-    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
-    if (regex.test(e.target.value)) { // 입력된 값이 패턴에 맞는지 검사
+    const regex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
+    if (regex.test(e.target.value)) {
+      // 입력된 값이 패턴에 맞는지 검사
       setPwValid(true);
     } else {
       setPwValid(false);
     }
-  }
+  };
 
   //id와 비밀번호의 스테이트의 값이 패턴에 맞는지 검사한 결과값이 true여야 버튼 활성화
-  useEffect(()=>{
-    if(idValid && pwValid) {
+  useEffect(() => {
+    if (idValid && pwValid) {
       setNotAllow(false);
-    }else {
+    } else {
       setNotAllow(true);
     }
-  },[idValid,pwValid])
+  }, [idValid, pwValid]);
 
   //버튼 클릭 이벤트
-  //이제 로그인 상태가 되게 코드를 추가??????
   const onClickConfirmButton = () => {
-    if(id === User.id && pw === User.pw){
-      alert('로그인에 성공했습니다.');
-    }else{
-      alert('등록되지 않은 회원입니다.')
-    }
-  }
+    const loginInfo = {
+      id: id,
+      password: pw,
+    };
+
+    // DB에 로그인 정보를 보내서 결과를 받아옴
+    Axios.post('/api/login', loginInfo).then((response) => {
+      // 실패했다면 로그인 실패로 경고
+      if (!response.data.success) {
+        alert('로그인 실패');
+        return;
+      }
+
+      // 성공했다면 localStorage에 id를 저장하고 홈으로 이동하고 새로고침함
+      localStorage.setItem('id', id);
+      navigate('/');
+      window.location.reload();
+    });
+  };
 
   return (
     <Page>
-      <TitleWrap>
-        로그인
-      </TitleWrap>
+      <TitleWrap>로그인</TitleWrap>
       <ContentWrap>
         <InputTitle>아이디</InputTitle>
         <InputWrap>
-          <Input 
-          type='text'
-          placeholder='영문, 숫자 포함 8자 이상 입력해주세요'
-          value={id}
-          onChange={handleId}
+          <Input
+            type="text"
+            placeholder="영문, 숫자 포함 8자 이상 입력해주세요"
+            value={id}
+            onChange={handleId}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -174,11 +182,11 @@ function LogInPage() {
 
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
-          <Input 
-          type='password'
-          placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요'
-          value={pw}
-          onChange={handlePassword}
+          <Input
+            type="password"
+            placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력해주세요"
+            value={pw}
+            onChange={handlePassword}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -186,20 +194,17 @@ function LogInPage() {
             <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
           )}
         </ErrorMessageWrap>
-      
 
         <div>
-          <BottomButton
-          onClick={onClickConfirmButton} 
-          disabled={notAllow}>확인</BottomButton>
+          <BottomButton onClick={onClickConfirmButton} disabled={notAllow}>
+            확인
+          </BottomButton>
         </div>
 
         <GoToSignUP>
-          <NavLink to='/signup'>회원가입 하러 가기</NavLink>
+          <NavLink to="/signup">회원가입 하러 가기</NavLink>
         </GoToSignUP>
-
       </ContentWrap>
-      
     </Page>
   );
 }
