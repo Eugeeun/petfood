@@ -10,7 +10,6 @@ import GamePage from './page/GamePage';
 
 const MainHeader = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   height: 100px;
   background-color: #f0f0f0;
@@ -20,6 +19,9 @@ const MainHeader = styled.div`
 const Logo = styled.div`
   height: 100%;
   width: 33.3%;
+  @media screen and (max-width: 1000px) {
+    width: 30%;
+  }
 `;
 
 const LogoImg = styled.img`
@@ -33,6 +35,10 @@ const Title = styled.h1`
   flex: 1;
   text-align: center;
   width: 33.3%;
+  @media screen and (max-width: 1000px) {
+    flex: none;
+    width: 40%;
+  }
 `;
 
 const NavLinks = styled.div`
@@ -40,6 +46,10 @@ const NavLinks = styled.div`
   justify-content: flex-end;
   align-items: right;
   width: 33.3%;
+
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -68,9 +78,34 @@ const LastNavLink = styled(Link)`
   }
 `;
 
-//로그인 상태면 로그아웃으로 로그아웃 / 마이페이지로 되게끔 코드 추가해야함
+const MediaHeader = styled.div`
+  display: none;
+  @media screen and (max-width: 1000px) {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-top: 2px solid #b4b4b4;
+    border-bottom: 2px solid #b4b4b4;
+  }
+`;
+
+const MediaLink = styled(Link)`
+  @media screen and (max-width: 1000px) {
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    color: navy;
+    margin: 0 20px;
+    &:hover {
+      font-weight: 2000;
+    }
+  }
+`;
 
 function App(props) {
+
   const handleLogout = () => {
     // 로그아웃을 하면 localStorage에서 id를 삭제하고 페이지를 새로고침하여
     // 컴포넌트를 리렌더링
@@ -99,6 +134,18 @@ function App(props) {
           <LastNavLink to="/mypage">마이페이지</LastNavLink>
         </NavLinks>
       </MainHeader>
+
+      <MediaHeader>
+        {!localStorage.getItem('id') ? (
+          <MediaLink to="/login">로그인</MediaLink>
+        ) : (
+          <MediaLink to="/" onClick={handleLogout}>
+            로그아웃
+          </MediaLink>
+        )}
+        <MediaLink to="/signup">회원가입</MediaLink>
+        <MediaLink to="/mypage">마이페이지</MediaLink>
+      </MediaHeader>
 
       <Routes>
         <Route index element={<MainPage />} />

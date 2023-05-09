@@ -4,18 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
 const Page = styled.div`
-  position: absolute;
-  top: 100px; //배너때문에 100px부터 시작
-  width: 100%;
   max-width: 500px;
-  padding: 0 20px;
-
-  left: 50%;
-  transform: translate(-50%, 0);
-
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  margin: 50px auto;
 `;
 
 const TitleWrap = styled.div`
