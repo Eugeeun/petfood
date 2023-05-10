@@ -77,3 +77,7 @@ localStorage를 이용하여 로그인된 유저의 id를 저장
 #### 쿼리
 
 `select is_edibility from edibility where species = '${req.body.species}' and food_name = '${req.body.foodName}';`
+
+### 서버와 클라이언트를 한 번에 실행
+
+루트 디렉토리에서 npm run dev 하면 됨
