@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -99,7 +98,7 @@ const MediaLink = styled(Link)`
     color: navy;
     margin: 0 20px;
     &:hover {
-      font-weight: 2000;
+      font-weight: 1000;
     }
   }
 `;
