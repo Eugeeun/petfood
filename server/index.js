@@ -65,4 +65,31 @@ app.post('/api/edibility', (req, res) => {
   });
 });
 
+app.post('/api/userinfo', (req, res) => {
+  // id를 가지고 애완동물의 이름과 품종명을 가져옴
+  const userInfo = `select breed, pet_name from pet where user_id = '${req.body.id}';`;
+  connect.query(userInfo, (err, rows, fields) => {
+    if (err || rows.length === 0) res.json({ success: false });
+    else res.json({ success: true, rows });
+  });
+});
+
+app.post('/api/updatepetinfo', (req, res) => {
+  // 펫 정보를 클라이언트에서 준 정보대로 수정
+  const petInfo = `update pet set breed = '${req.body.breed}' , pet_name = '${req.body.petName}' where user_id = '${req.body.id}';`;
+  connect.query(petInfo, (err, rows, fields) => {
+    if (err) res.json({ success: false });
+    else res.json({ success: true });
+  });
+});
+
+app.post('/api/updateuserinfo', (req, res) => {
+  // 유저 정보를 클라이언트에서 준 정보대로 수정
+  const userInfo = `update user set password = '${req.body.password}' where user_id = '${req.body.id}'`;
+  connect.query(userInfo, (err, rows, fields) => {
+    if (err) res.json({ success: false });
+    else res.json({ success: true });
+  });
+});
+
 app.listen(PORT, () => console.log(`${PORT} listening!`));
