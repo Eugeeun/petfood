@@ -19,7 +19,7 @@ const Logo = styled.div`
   height: 100%;
   width: 33.3%;
   @media screen and (max-width: 1000px) {
-    width: 30%;
+    width: 50%;
   }
 `;
 
@@ -36,7 +36,7 @@ const Title = styled.h1`
   width: 33.3%;
   @media screen and (max-width: 1000px) {
     flex: none;
-    width: 40%;
+    width: 50%;
   }
 `;
 
@@ -109,7 +109,14 @@ function App(props) {
     // 로그아웃을 하면 localStorage에서 id를 삭제하고 페이지를 새로고침하여
     // 컴포넌트를 리렌더링
     localStorage.removeItem('id');
-    window.location.reload();
+    window.location.reload(); //
+    // 메인 페이지로 이동
+    window.location.href = '/';
+    alert('로그아웃 되었습니다');
+  };
+
+  const handleMypage = () => {
+    alert('로그인 해주세요');
   };
 
   return (
@@ -123,27 +130,39 @@ function App(props) {
         <Title>Pet Food</Title>
         <NavLinks>
           {!localStorage.getItem('id') ? (
+            <>
             <NavLink to="/login">로그인</NavLink>
+            <NavLink to="/signup">회원가입</NavLink>
+            <LastNavLink onClick={handleMypage}>
+            마이페이지</LastNavLink>
+            </>
           ) : (
-            <NavLink to="/" onClick={handleLogout}>
-              로그아웃
-            </NavLink>
+            <>
+              <NavLink to="/" onClick={handleLogout}>
+                로그아웃
+              </NavLink>
+              <LastNavLink to="/mypage">마이페이지</LastNavLink>
+            </>
           )}
-          <NavLink to="/signup">회원가입</NavLink>
-          <LastNavLink to="/mypage">마이페이지</LastNavLink>
         </NavLinks>
       </MainHeader>
 
       <MediaHeader>
         {!localStorage.getItem('id') ? (
+          <>
           <MediaLink to="/login">로그인</MediaLink>
+          <MediaLink to="/signup">회원가입</MediaLink>
+          <MediaLink onClick={handleMypage}>
+          마이페이지</MediaLink>
+          </>
         ) : (
-          <MediaLink to="/" onClick={handleLogout}>
-            로그아웃
-          </MediaLink>
+          <>
+            <MediaLink to="/" onClick={handleLogout}>
+              로그아웃
+            </MediaLink>
+            <MediaLink to="/mypage">마이페이지</MediaLink>
+          </>
         )}
-        <MediaLink to="/signup">회원가입</MediaLink>
-        <MediaLink to="/mypage">마이페이지</MediaLink>
       </MediaHeader>
 
       <Routes>
