@@ -192,12 +192,12 @@ function SignUpPage() {
             <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
           )}
         </ErrorMessageWrap>
-        <InputTitle>애왼동물명</InputTitle>
+        <InputTitle>애완동물명</InputTitle>
         <InputWrap>
           <Input onChange={handlePetName} />
         </InputWrap>
 
-        <InputTitle>품종명</InputTitle>
+        <InputTitle>품종</InputTitle>
         <InputWrap>
           <Input onChange={handleBreed} />
         </InputWrap>

@@ -104,7 +104,6 @@ const MediaLink = styled(Link)`
 `;
 
 function App(props) {
-
   const handleLogout = () => {
     // 로그아웃을 하면 localStorage에서 id를 삭제하고 페이지를 새로고침하여
     // 컴포넌트를 리렌더링
@@ -131,10 +130,11 @@ function App(props) {
         <NavLinks>
           {!localStorage.getItem('id') ? (
             <>
-            <NavLink to="/login">로그인</NavLink>
-            <NavLink to="/signup">회원가입</NavLink>
-            <LastNavLink onClick={handleMypage}>
-            마이페이지</LastNavLink>
+              <NavLink to="/login">로그인</NavLink>
+              <NavLink to="/signup">회원가입</NavLink>
+              <LastNavLink onClick={handleMypage} to="/login">
+                마이페이지
+              </LastNavLink>
             </>
           ) : (
             <>
@@ -150,10 +150,9 @@ function App(props) {
       <MediaHeader>
         {!localStorage.getItem('id') ? (
           <>
-          <MediaLink to="/login">로그인</MediaLink>
-          <MediaLink to="/signup">회원가입</MediaLink>
-          <MediaLink onClick={handleMypage}>
-          마이페이지</MediaLink>
+            <MediaLink to="/login">로그인</MediaLink>
+            <MediaLink to="/signup">회원가입</MediaLink>
+            <MediaLink onClick={handleMypage}>마이페이지</MediaLink>
           </>
         ) : (
           <>
