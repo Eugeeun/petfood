@@ -92,4 +92,28 @@ app.post('/api/updateuserinfo', (req, res) => {
   });
 });
 
+app.get('/api/randomfood', (req, res) => {
+  // DB에서 음식의 종류 중 하나를 가져옴
+  const randomFood = `select * from food order by rand() limit 1;`;
+  connect.query(randomFood, (err, rows, fields) => {
+    if (err) res.json({ success: false });
+    else res.json({ success: true, rows });
+  });
+});
+
+app.post('/api/answercheck', (req, res) => {
+  // 종과 음식과 정답이 맞는지 확인
+  const edibility = `select is_edibility from edibility where food_name = '${req.body.foodName}' and species = '${req.body.species}';`;
+  connect.query(edibility, (err, rows, fields) => {
+    if (err) res.json({ success: false });
+    else if (rows[0].is_edibility !== req.body.answer)
+      res.json({
+        success: true,
+        correct: false,
+        answer: rows[0].is_edibility,
+      });
+    else res.json({ success: true, correct: true });
+  });
+});
+
 app.listen(PORT, () => console.log(`${PORT} listening!`));
