@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 
@@ -13,7 +13,7 @@ const TitleWrap = styled.div`
   border-radius: 10px;
   background-color: #f0f0f0;
   margin: 20px 20px 5px 20px;
-  img { 
+  img {
     width: 100%;
   }
 `;
@@ -25,7 +25,7 @@ const ChoiceSpeice = styled.div`
   align-items: center;
   font-size: 17px;
 
-  select{
+  select {
     width: 100px;
     height: 30px;
   }
@@ -53,70 +53,106 @@ const Answer = styled.div`
   height: 80px;
   margin: 20px 20px 100px 20px;
   display: flex;
-  
+
   button {
     font-size: 40px;
     font-weight: 500;
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items:center;
-    
-    span{
+    align-items: center;
+
+    span {
       font-weight: 800;
     }
-
   }
 `;
 
 function GamePage() {
-
   const [species, setSpecies] = useState('개');
-  
+  const [food, setFood] = useState('');
+
+  useEffect(() => {
+    Axios.get('/api/randomfood').then((response) => {
+      setFood(response.data.rows[0].food_name);
+    });
+  }, []);
+
+  useEffect(() => {
+    const userId = { id: localStorage.getItem('id') };
+    if (userId.id) {
+      // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 받아옴
+      Axios.post('/api/petinfo', userId).then((response) => {
+        if (response.data.success) {
+          const petData = response.data.rows[0];
+          setSpecies(petData.species);
+        }
+      });
+    }
+
+    const select = document.querySelector('select');
+    const options = select.options;
+    for (let i = 0; i < options.length; ++i) {
+      if (options[i].value === species) {
+        select.selectedIndex = i;
+      }
+    }
+  }, [species]);
+
   //select 박스에서 반려동물 종를 선택하고 species에 저장
   const handleSelectChange = (e) => {
     setSpecies(e.target.value);
-  }
+  };
 
-  const userId = { id: localStorage.getItem('id') };
-  if (userId.id) {
-    // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 받아옴
-    Axios.post('/api/petinfo', userId).then((response) => {
-      if (response.data.success) {
-        const petData = response.data.rows[0];
-        setSpecies(petData.species);
+  const submitAnswer = (answer) => {
+    const answerData = {
+      foodName: food,
+      species: species,
+      answer: answer,
+    };
+    Axios.post('/api/answercheck', answerData).then((response) => {
+      if (response.data.success && response.data.correct) {
+        alert('정답입니다!');
       }
     });
-  }
+  };
 
   const onClickChoice_O = (e) => {
-    alert('정답입니다'); //임시
-  }
+    submitAnswer('o');
+  };
   const onClickChoice_Tri = () => {
-    alert('정답입니다'); //임시
-  }
+    submitAnswer('△');
+  };
   const onClickChoice_X = () => {
-    alert('정답입니다'); //임시
-  }
+    submitAnswer('x');
+  };
 
   return (
     <Page>
-      <TitleWrap><img src="/image/quizbanner.png" alt="배너" /></TitleWrap>
-      <ChoiceSpeice> 반려동물 종 선택 : &nbsp;
+      <TitleWrap>
+        <img src='/image/quizbanner.png' alt='배너' />
+      </TitleWrap>
+      <ChoiceSpeice>
+        {' '}
+        반려동물 종 선택 : &nbsp;
         <select onChange={handleSelectChange}>
           <option>개</option>
           <option>고양이</option>
         </select>
       </ChoiceSpeice>
-      <Content>사진</Content>
-      <FoodName><span>'음식명'</span> 섭취 가능 여부</FoodName>
+      <Content>{food}</Content>
+      <FoodName>
+        <span>'음식명'</span> 섭취 가능 여부
+      </FoodName>
       <Answer>
         <button onClick={onClickChoice_O}>O</button>
-        <button onClick={onClickChoice_Tri}><span>△</span></button>
+        <button onClick={onClickChoice_Tri}>
+          <span>△</span>
+        </button>
         <button onClick={onClickChoice_X}>X</button>
       </Answer>
     </Page>
-  )
+  );
 }
 
-export default GamePage
+export default GamePage;
