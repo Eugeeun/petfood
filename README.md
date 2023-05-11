@@ -81,3 +81,24 @@ localStorage를 이용하여 로그인된 유저의 id를 저장
 ### 서버와 클라이언트를 한 번에 실행
 
 루트 디렉토리에서 npm run dev 하면 됨
+
+## 22.05.11
+
+### 유저 비밀번호와 애완동물명, 품종 변경기능 추가
+
+#### 쿼리
+
+`update pet set breed = '${req.body.breed}' , pet_name = '${req.body.petName}' where user_id = '${req.body.id}';`
+`update user set password = '${req.body.password}' where user_id = '${req.body.id}';`
+
+### DB의 음식중 하나를 랜덤으로 가져오는 기능 추가
+
+#### 쿼리
+
+`select * from food order by rand() limit 1;`
+
+### 종과 음식명을 토대로 급여가능음식 퀴즈 정답 판단
+
+#### 쿼리
+
+`select is_edibility from edibility where food_name = '${req.body.foodName}' and species = '${req.body.species}';`
