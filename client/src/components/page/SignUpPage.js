@@ -128,6 +128,13 @@ function SignUpPage() {
     }
   }, [idValid, pwValid]);
 
+  //엔터키를 눌렀을때 onClickConfirmButton 함수 실행
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !notAllow) {
+      onClickConfirmButton();
+    }
+  };
+
   //버튼 클릭 이벤트 + useNavigate 함수를 통한 로그인 페이지로 이동함
   const navigate = useNavigate();
   const onClickConfirmButton = () => {
@@ -168,6 +175,7 @@ function SignUpPage() {
             placeholder="영문, 숫자 포함 8자 이상 입력해주세요"
             value={id}
             onChange={handleId}
+            onKeyDown={handleKeyDown}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -185,6 +193,7 @@ function SignUpPage() {
             placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력해주세요"
             value={pw}
             onChange={handlePassword}
+            onKeyDown={handleKeyDown}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -194,12 +203,18 @@ function SignUpPage() {
         </ErrorMessageWrap>
         <InputTitle>애완동물명</InputTitle>
         <InputWrap>
-          <Input onChange={handlePetName} />
+          <Input onChange={handlePetName} 
+          onKeyDown={handleKeyDown}
+          />
         </InputWrap>
 
         <InputTitle>품종</InputTitle>
         <InputWrap>
-          <Input onChange={handleBreed} />
+          <Input 
+          placeholder="노르웨이고양이"
+          onChange={handleBreed} 
+          onKeyDown={handleKeyDown}
+          />
         </InputWrap>
         <ErrorMessageWrap>
           {!breedValid && breed.length > 0 && (

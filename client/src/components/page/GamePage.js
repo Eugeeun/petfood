@@ -104,6 +104,16 @@ function GamePage() {
     setSpecies(e.target.value);
   };
 
+  const onClickChoice_O = (e) => {
+    submitAnswer('o');
+  };
+  const onClickChoice_Tri = () => {
+    submitAnswer('△');
+  };
+  const onClickChoice_X = () => {
+    submitAnswer('x');
+  };
+
   const submitAnswer = (answer) => {
     const answerData = {
       foodName: food,
@@ -114,17 +124,26 @@ function GamePage() {
       if (response.data.success && response.data.correct) {
         alert('정답입니다!');
       }
-    });
+      else {
+        alert(`오답입니다!\n정답은 '${response.data.answer}' 입니다`);
+      }
+    })
+    .then(loadNextQuestion);
   };
 
-  const onClickChoice_O = (e) => {
-    submitAnswer('o');
-  };
-  const onClickChoice_Tri = () => {
-    submitAnswer('△');
-  };
-  const onClickChoice_X = () => {
-    submitAnswer('x');
+  const loadNextQuestion = () => {
+    Axios.get('/api/randomfood').then((response) => {
+      if (response.data.success) {
+        const nextFood = response.data.rows[0];
+        if (nextFood.food_name === food) {
+          loadNextQuestion(); // 값이 이전 문제의 값과 똑같다면 다시 함수 호출
+        } else {
+          setFood(nextFood.food_name);
+        }
+      } else {
+        alert('문제를 가져오는 데 실패했습니다.');
+      }
+    });
   };
 
   return (
@@ -142,14 +161,14 @@ function GamePage() {
       </ChoiceSpeice>
       <Content>{food}</Content>
       <FoodName>
-        <span>'음식명'</span> 섭취 가능 여부
+        <span>'{food}'</span> 섭취 가능 여부
       </FoodName>
       <Answer>
-        <button onClick={onClickChoice_O}>O</button>
-        <button onClick={onClickChoice_Tri}>
+        <button value='O' onClick={onClickChoice_O} >O</button>
+        <button value='△' onClick={onClickChoice_Tri}>
           <span>△</span>
         </button>
-        <button onClick={onClickChoice_X}>X</button>
+        <button value='X' onClick={onClickChoice_X}>X</button>
       </Answer>
     </Page>
   );

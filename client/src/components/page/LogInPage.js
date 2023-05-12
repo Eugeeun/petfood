@@ -129,6 +129,13 @@ function LogInPage() {
     }
   }, [idValid, pwValid]);
 
+  //엔터키를 눌렀을때 onClickConfirmButton 함수 실행
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !notAllow) {
+      onClickConfirmButton();
+    }
+  };
+
   //버튼 클릭 이벤트
   const onClickConfirmButton = () => {
     const loginInfo = {
@@ -162,6 +169,7 @@ function LogInPage() {
             placeholder="영문, 숫자 포함 8자 이상 입력해주세요"
             value={id}
             onChange={handleId}
+            onKeyDown={handleKeyDown}
           />
         </InputWrap>
         <ErrorMessageWrap>
@@ -177,6 +185,7 @@ function LogInPage() {
             placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력해주세요"
             value={pw}
             onChange={handlePassword}
+            onKeyDown={handleKeyDown}
           />
         </InputWrap>
         <ErrorMessageWrap>
