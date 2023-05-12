@@ -102,3 +102,9 @@ localStorage를 이용하여 로그인된 유저의 id를 저장
 #### 쿼리
 
 `select is_edibility from edibility where food_name = '${req.body.foodName}' and species = '${req.body.species}';`
+
+#### 로그인 하지 않은 상태에서 게임페이지에서 버튼을 누르면 오류가 발생합니다 ㅠㅠ
+
+[1] [HPM] Error occurred while proxying request localhost:3000/api/answercheck to http://localhost:5000/ [ECONNRESET] (https://nodejs.org/api/errors.html#errors_common_system_errors)
+[0] [nodemon] app crashed - waiting for file changes before starting...
+
