@@ -122,6 +122,7 @@ function GamePage() {
       species: species,
       answer: answer,
     };
+
     Axios.post('/api/answercheck', answerData)
       .then((response) => {
         if (response.data.success && response.data.correct) {
@@ -141,6 +142,7 @@ function GamePage() {
           loadNextQuestion(); // 값이 이전 문제의 값과 똑같다면 다시 함수 호출
         } else {
           setFood(nextFood.food_name);
+          setCategory(nextFood.category);
         }
       } else {
         alert('문제를 가져오는 데 실패했습니다.');
