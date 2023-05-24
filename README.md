@@ -103,9 +103,13 @@ localStorage를 이용하여 로그인된 유저의 id를 저장
 
 `select is_edibility from edibility where food_name = '${req.body.foodName}' and species = '${req.body.species}';`
 
-## 22.05.12
-#### 로그인 하지 않은 상태에서 게임페이지에서 버튼을 누르면 오류가 발생합니다 ㅠㅠ
+## 22.05.24
 
-[1] [HPM] Error occurred while proxying request localhost:3000/api/answercheck to http://localhost:5000/ [ECONNRESET] (https://nodejs.org/api/errors.html#errors_common_system_errors)
-[0] [nodemon] app crashed - waiting for file changes before starting...
+### 음식 이미지 수집 및 DB에 저장
 
+루트 디렉토리에서 npm i로 라이브러리 설치하고 node data.js를 터미널에 타이핑하면 됨!
+** 주의 **
+mysql에서
+insert into animal values ('개');
+insert into animal values ('고양이');
+를 먼저 해주어야 작동함!

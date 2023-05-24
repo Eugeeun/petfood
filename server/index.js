@@ -5,6 +5,7 @@ const { connect } = require('./connect');
 
 app.use(express.json()); // body-parser라는 것인데 josn형태의 데이터를 받으면 request.body로 접근가능
 app.use(express.urlencoded({ extended: true })); // 데이터의 형태가 url-encoded면 request.body로 접근가능
+app.use('/foods', express.static('foods'));
 
 app.post('/api/register', (req, res) => {
   // 유저 정보를 DB에 저장

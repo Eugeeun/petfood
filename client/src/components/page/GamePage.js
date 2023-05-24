@@ -71,10 +71,12 @@ const Answer = styled.div`
 function GamePage() {
   const [species, setSpecies] = useState('개');
   const [food, setFood] = useState('');
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
     Axios.get('/api/randomfood').then((response) => {
       setFood(response.data.rows[0].food_name);
+      setCategory(response.data.rows[0].category);
     });
   }, []);
 
@@ -120,15 +122,15 @@ function GamePage() {
       species: species,
       answer: answer,
     };
-    Axios.post('/api/answercheck', answerData).then((response) => {
-      if (response.data.success && response.data.correct) {
-        alert('정답입니다!');
-      }
-      else {
-        alert(`오답입니다!\n정답은 '${response.data.answer}' 입니다`);
-      }
-    })
-    .then(loadNextQuestion);
+    Axios.post('/api/answercheck', answerData)
+      .then((response) => {
+        if (response.data.success && response.data.correct) {
+          alert('정답입니다!');
+        } else {
+          alert(`오답입니다!\n정답은 '${response.data.answer}' 입니다`);
+        }
+      })
+      .then(loadNextQuestion);
   };
 
   const loadNextQuestion = () => {
@@ -149,7 +151,7 @@ function GamePage() {
   return (
     <Page>
       <TitleWrap>
-        <img src='/image/quizbanner.png' alt='배너' />
+        <img src="/image/quizbanner.png" alt="배너" />
       </TitleWrap>
       <ChoiceSpeice>
         {' '}
@@ -159,16 +161,25 @@ function GamePage() {
           <option>고양이</option>
         </select>
       </ChoiceSpeice>
-      <Content>{food}</Content>
+      <Content>
+        <img
+          src={`http://localhost:5000/foods/${category}/${food}.jpg `}
+          alt="배너"
+        />
+      </Content>
       <FoodName>
         <span>'{food}'</span> 섭취 가능 여부
       </FoodName>
       <Answer>
-        <button value='O' onClick={onClickChoice_O} >O</button>
-        <button value='△' onClick={onClickChoice_Tri}>
+        <button value="O" onClick={onClickChoice_O}>
+          O
+        </button>
+        <button value="△" onClick={onClickChoice_Tri}>
           <span>△</span>
         </button>
-        <button value='X' onClick={onClickChoice_X}>X</button>
+        <button value="X" onClick={onClickChoice_X}>
+          X
+        </button>
       </Answer>
     </Page>
   );
