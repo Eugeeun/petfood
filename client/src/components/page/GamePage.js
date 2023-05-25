@@ -31,11 +31,16 @@ const ChoiceSpeice = styled.div`
   }
 `;
 
-const Content = styled.div`
+const FoodImg = styled.div`
+  display: flex;
   height: 400px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 20px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const FoodName = styled.div`
@@ -163,12 +168,13 @@ function GamePage() {
           <option>고양이</option>
         </select>
       </ChoiceSpeice>
-      <Content>
+      <FoodImg>
         <img
           src={`http://localhost:5000/foods/${category}/${food}.jpg `}
           alt="배너"
         />
-      </Content>
+        
+      </FoodImg>
       <FoodName>
         <span>'{food}'</span> 섭취 가능 여부
       </FoodName>
