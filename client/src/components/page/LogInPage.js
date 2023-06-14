@@ -8,23 +8,26 @@ const Page = styled.div`
   margin: 50px auto;
 `;
 
-const TitleWrap = styled.div`
+const Title = styled.div`
   margin-top: 50px;
   font-size: 26px;
   font-weight: 700;
   color: navy;
   text-align: center;
 `;
-const ContentWrap = styled.div`
+
+const Content = styled.div`
   flex: 1;
   margin: 0 30px;
 `;
+
 const InputTitle = styled.div`
   margin-top: 30px;
   font-size: 12px;
   font-weight: 600;
   color: navy;
 `;
+
 const InputWrap = styled.div`
   display: flex;
   border-radius: 8px;
@@ -32,10 +35,12 @@ const InputWrap = styled.div`
   margin-top: 8px;
   background-color: white;
   border: 1px solid #e2e0e0;
+
   &:focus-within {
     border: 1px solid #9e30f4;
   }
 `;
+
 const Input = styled.input`
   width: 100%;
   outline: none;
@@ -43,12 +48,13 @@ const Input = styled.input`
   height: 17px;
   font-size: 14px;
   font-weight: 400;
+
   &::placeholder {
     color: #dadada;
   }
 `;
 
-const ErrorMessageWrap = styled.div`
+const ErrorMessage = styled.div`
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
@@ -65,21 +71,23 @@ const BottomButton = styled.button`
   margin-top: 40px;
   margin-bottom: 20px;
   cursor: pointer;
+
   &:disabled {
     background-color: #dadada;
     color: white;
   }
 `;
 
-const GoToSignUP = styled.div`
+const GoToSignUp = styled.div`
   text-align: center;
-  margin-bottom: 100px; //밑에좀 키우기
+  margin-bottom: 100px;
 `;
 
 const NavLink = styled(Link)`
   font-size: 12px;
   font-weight: 500;
   text-decoration: none;
+
   &:hover {
     font-weight: 700;
     color: navy;
@@ -87,10 +95,8 @@ const NavLink = styled(Link)`
 `;
 
 function LogInPage() {
-  const [id, setId] = useState(''); //아이디 스테이트 생성 및 초기화
+  const [id, setId] = useState('');
   const [pw, setPw] = useState('');
-
-  //스테이트값 반환
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(false);
@@ -99,59 +105,39 @@ function LogInPage() {
 
   const handleId = (e) => {
     setId(e.target.value);
-    const regex = /^[a-zA-Z0-9]{8,}$/; // 8자 이상의 유효한 패턴으로 정규표현식 생성
-    if (regex.test(e.target.value)) {
-      // 입력된 값이 패턴에 맞는지 검사
-      setIdValid(true);
-    } else {
-      setIdValid(false);
-    }
+    const regex = /^[a-zA-Z0-9]{8,}$/;
+    setIdValid(regex.test(e.target.value));
   };
 
   const handlePassword = (e) => {
     setPw(e.target.value);
     const regex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
-    if (regex.test(e.target.value)) {
-      // 입력된 값이 패턴에 맞는지 검사
-      setPwValid(true);
-    } else {
-      setPwValid(false);
-    }
+    setPwValid(regex.test(e.target.value));
   };
 
-  //id와 비밀번호의 스테이트의 값이 패턴에 맞는지 검사한 결과값이 true여야 버튼 활성화
   useEffect(() => {
-    if (idValid && pwValid) {
-      setNotAllow(false);
-    } else {
-      setNotAllow(true);
-    }
+    setNotAllow(!(idValid && pwValid));
   }, [idValid, pwValid]);
 
-  //엔터키를 눌렀을때 onClickConfirmButton 함수 실행
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !notAllow) {
       onClickConfirmButton();
     }
   };
 
-  //버튼 클릭 이벤트
   const onClickConfirmButton = () => {
     const loginInfo = {
       id: id,
       password: pw,
     };
 
-    // DB에 로그인 정보를 보내서 결과를 받아옴
     Axios.post('/api/login', loginInfo).then((response) => {
-      // 실패했다면 로그인 실패로 경고
       if (!response.data.success) {
         alert('로그인 실패');
         return;
       }
 
-      // 성공했다면 localStorage에 id를 저장하고 홈으로 이동하고 새로고침함
       localStorage.setItem('id', id);
       navigate('/');
       window.location.reload();
@@ -160,8 +146,8 @@ function LogInPage() {
 
   return (
     <Page>
-      <TitleWrap>로그인</TitleWrap>
-      <ContentWrap>
+      <Title>로그인</Title>
+      <Content>
         <InputTitle>아이디</InputTitle>
         <InputWrap>
           <Input
@@ -172,11 +158,11 @@ function LogInPage() {
             onKeyDown={handleKeyDown}
           />
         </InputWrap>
-        <ErrorMessageWrap>
+        <ErrorMessage>
           {!idValid && id.length > 0 && (
             <div>8자 이상의 올바른 아이디를 입력해주세요</div>
           )}
-        </ErrorMessageWrap>
+        </ErrorMessage>
 
         <InputTitle>비밀번호</InputTitle>
         <InputWrap>
@@ -188,11 +174,11 @@ function LogInPage() {
             onKeyDown={handleKeyDown}
           />
         </InputWrap>
-        <ErrorMessageWrap>
+        <ErrorMessage>
           {!pwValid && pw.length > 0 && (
             <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
           )}
-        </ErrorMessageWrap>
+        </ErrorMessage>
 
         <div>
           <BottomButton onClick={onClickConfirmButton} disabled={notAllow}>
@@ -200,10 +186,10 @@ function LogInPage() {
           </BottomButton>
         </div>
 
-        <GoToSignUP>
+        <GoToSignUp>
           <NavLink to="/signup">회원가입 하러 가기</NavLink>
-        </GoToSignUP>
-      </ContentWrap>
+        </GoToSignUp>
+      </Content>
     </Page>
   );
 }
