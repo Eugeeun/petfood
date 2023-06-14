@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
+// 페이지 전체를 감싸는 컨테이너
 const Page = styled.div`
   max-width: 500px;
   margin: 50px auto;
 `;
 
+// 로그인 페이지의 제목
 const Title = styled.div`
   margin-top: 50px;
   font-size: 26px;
@@ -16,11 +18,13 @@ const Title = styled.div`
   text-align: center;
 `;
 
+// 로그인 컨텐츠를 감싸는 컨테이너
 const Content = styled.div`
   flex: 1;
   margin: 0 30px;
 `;
 
+// 입력 필드 제목
 const InputTitle = styled.div`
   margin-top: 30px;
   font-size: 12px;
@@ -28,6 +32,7 @@ const InputTitle = styled.div`
   color: navy;
 `;
 
+// 입력 필드를 감싸는 컨테이너
 const InputWrap = styled.div`
   display: flex;
   border-radius: 8px;
@@ -41,6 +46,7 @@ const InputWrap = styled.div`
   }
 `;
 
+// 입력 필드 스타일
 const Input = styled.input`
   width: 100%;
   outline: none;
@@ -54,12 +60,14 @@ const Input = styled.input`
   }
 `;
 
+// 에러 메시지 스타일
 const ErrorMessage = styled.div`
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
 `;
 
+// 하단 버튼 스타일
 const BottomButton = styled.button`
   width: 100%;
   height: 48px;
@@ -78,11 +86,13 @@ const BottomButton = styled.button`
   }
 `;
 
+// 회원가입 페이지로 이동하는 링크 스타일
 const GoToSignUp = styled.div`
   text-align: center;
   margin-bottom: 100px;
 `;
 
+// 링크 스타일
 const NavLink = styled(Link)`
   font-size: 12px;
   font-weight: 500;
@@ -95,20 +105,28 @@ const NavLink = styled(Link)`
 `;
 
 function LogInPage() {
+  // 입력된 아이디와 비밀번호를 상태로 관리
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
+
+  // 아이디와 비밀번호의 유효성을 검사하는 상태
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
+
+  // 로그인 버튼 활성/비활성 상태를 관리
   const [notAllow, setNotAllow] = useState(false);
 
+  // React Router의 navigate 함수를 사용하여 페이지 이동
   const navigate = useNavigate();
 
+  // 아이디 입력 필드의 변경 이벤트 핸들러
   const handleId = (e) => {
     setId(e.target.value);
     const regex = /^[a-zA-Z0-9]{8,}$/;
     setIdValid(regex.test(e.target.value));
   };
 
+  // 비밀번호 입력 필드의 변경 이벤트 핸들러
   const handlePassword = (e) => {
     setPw(e.target.value);
     const regex =
@@ -116,16 +134,19 @@ function LogInPage() {
     setPwValid(regex.test(e.target.value));
   };
 
+  // 아이디와 비밀번호의 유효성이 변경될 때마다 실행
   useEffect(() => {
     setNotAllow(!(idValid && pwValid));
   }, [idValid, pwValid]);
 
+  // 키보드 입력 이벤트 핸들러
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !notAllow) {
       onClickConfirmButton();
     }
   };
 
+  // 확인 버튼 클릭 이벤트 핸들러
   const onClickConfirmButton = () => {
     const loginInfo = {
       id: id,
