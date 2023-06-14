@@ -14,9 +14,11 @@ app.post('/api/register', (req, res) => {
   const userInfoQuery = `INSERT INTO user VALUES ('${id}', '${password}');`;
   const petInfoQuery = `INSERT INTO pet VALUES ('${id}', '${breed}', '${petName}');`;
 
+  // 사용자 정보를 데이터베이스에 삽입합니다.
   connect.query(userInfoQuery, (err, rows, fields) => {
     if (err) return res.json({ success: false });
 
+    // 반려동물 정보를 데이터베이스에 삽입합니다.
     connect.query(petInfoQuery, (err, rows, fields) => {
       if (err) return res.json({ success: false });
 
@@ -31,6 +33,7 @@ app.post('/api/breed', (req, res) => {
 
   const breedQuery = `SELECT * FROM specie WHERE breed = '${breed}';`;
 
+  // 특정 품종이 데이터베이스에 존재하는지 확인합니다.
   connect.query(breedQuery, (err, rows, fields) => {
     if (err || rows.length === 0) return res.json({ success: false });
 
@@ -44,6 +47,7 @@ app.post('/api/login', (req, res) => {
 
   const loginQuery = `SELECT * FROM user WHERE user_id = '${id}' AND password = '${password}';`;
 
+  // 사용자의 로그인 정보를 확인합니다.
   connect.query(loginQuery, (err, rows, fields) => {
     if (err || rows.length === 0) return res.json({ success: false });
 
@@ -57,6 +61,7 @@ app.post('/api/petinfo', (req, res) => {
 
   const petInfoQuery = `SELECT breed, species FROM specie WHERE breed = (SELECT breed FROM pet WHERE user_id = '${id}');`;
 
+  // 특정 사용자의 애완동물 정보를 조회합니다.
   connect.query(petInfoQuery, (err, rows, fields) => {
     if (err || rows.length === 0) return res.json({ success: false });
 
@@ -70,6 +75,7 @@ app.post('/api/edibility', (req, res) => {
 
   const edibilityQuery = `SELECT is_edibility FROM edibility WHERE species = '${species}' AND food_name = '${foodName}';`;
 
+  // 특정 반려동물 종과 음식의 섭취 가능 여부를 확인합니다.
   connect.query(edibilityQuery, (err, rows, fields) => {
     if (err || rows.length === 0) return res.json({ success: false });
 
@@ -88,6 +94,7 @@ app.post('/api/userinfo', (req, res) => {
 
   const userInfoQuery = `SELECT breed, pet_name FROM pet WHERE user_id = '${id}';`;
 
+  // 특정 사용자의 정보를 조회합니다.
   connect.query(userInfoQuery, (err, rows, fields) => {
     if (err || rows.length === 0) return res.json({ success: false });
 
@@ -101,6 +108,7 @@ app.post('/api/updatepetinfo', (req, res) => {
 
   const updatePetInfoQuery = `UPDATE pet SET breed = '${breed}', pet_name = '${petName}' WHERE user_id = '${id}';`;
 
+  // 특정 사용자의 애완동물 정보를 수정합니다.
   connect.query(updatePetInfoQuery, (err, rows, fields) => {
     if (err) return res.json({ success: false });
 
@@ -114,6 +122,7 @@ app.post('/api/updateuserinfo', (req, res) => {
 
   const updateUserInfoQuery = `UPDATE user SET password = '${password}' WHERE user_id = '${id}';`;
 
+  // 특정 사용자의 정보를 수정합니다.
   connect.query(updateUserInfoQuery, (err, rows, fields) => {
     if (err) return res.json({ success: false });
 
@@ -125,6 +134,7 @@ app.post('/api/updateuserinfo', (req, res) => {
 app.get('/api/randomfood', (req, res) => {
   const randomFoodQuery = `SELECT * FROM food ORDER BY RAND() LIMIT 1;`;
 
+  // 랜덤으로 음식을 조회합니다.
   connect.query(randomFoodQuery, (err, rows, fields) => {
     if (err) return res.json({ success: false });
 
@@ -138,6 +148,7 @@ app.post('/api/answercheck', (req, res) => {
 
   const answerCheckQuery = `SELECT is_edibility FROM edibility WHERE food_name = '${foodName}' AND species = '${species}';`;
 
+  // 특정 음식과 반려동물 종에 대한 정답을 확인합니다.
   connect.query(answerCheckQuery, (err, rows, fields) => {
     if (err) return res.json({ success: false });
 
