@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 
+// 스타일드 컴포넌트를 사용하여 UI 요소를 스타일링합니다.
 const Page = styled.div`
   max-width: 500px;
   margin: 50px auto;
@@ -74,11 +75,12 @@ const Answer = styled.div`
 `;
 
 function GamePage() {
-  const [species, setSpecies] = useState('개');
-  const [food, setFood] = useState('');
-  const [category, setCategory] = useState('');
+  const [species, setSpecies] = useState('개'); // 반려동물 종 상태 변수
+  const [food, setFood] = useState(''); // 음식 상태 변수
+  const [category, setCategory] = useState(''); // 카테고리 상태 변수
 
   useEffect(() => {
+    // 컴포넌트가 마운트될 때 랜덤한 음식을 가져와 상태를 설정합니다.
     Axios.get('/api/randomfood').then((response) => {
       setFood(response.data.rows[0].food_name);
       setCategory(response.data.rows[0].category);
@@ -88,7 +90,7 @@ function GamePage() {
   useEffect(() => {
     const userId = { id: localStorage.getItem('id') };
     if (userId.id) {
-      // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 받아옴
+      // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 가져옵니다.
       Axios.post('/api/petinfo', userId).then((response) => {
         if (response.data.success) {
           const petData = response.data.rows[0];
@@ -107,14 +109,17 @@ function GamePage() {
   }, [species]);
 
   const handleSelectChange = (event) => {
+    // 반려동물 종을 선택할 때 호출되는 이벤트 핸들러입니다.
     setSpecies(event.target.value);
   };
 
   const onClickChoice = (answer) => {
+    // 버튼을 클릭했을 때 호출되는 이벤트 핸들러입니다.
     submitAnswer(answer);
   };
 
   const submitAnswer = (answer) => {
+    // 정답을 서버에 제출합니다.
     const answerData = {
       foodName: food,
       species: species,
@@ -126,13 +131,14 @@ function GamePage() {
         if (response.data.success && response.data.correct) {
           alert('정답입니다!');
         } else {
-          alert(`오답입니다!\n정답은 '${response.data.answer}' 입니다`);
+          alert(`오답입니다!\n정답은 '${response.data.answer}' 입니다.`);
         }
       })
       .then(loadNextQuestion);
   };
 
   const loadNextQuestion = () => {
+    // 다음 문제를 가져옵니다.
     Axios.get('/api/randomfood').then((response) => {
       if (response.data.success) {
         const nextFood = response.data.rows[0];
@@ -162,21 +168,21 @@ function GamePage() {
       </ChoiceSpeice>
       <FoodImg>
         <img
-          src={`http://localhost:5000/foods/${category}/${food}.jpg `}
-          alt="배너"
+          src={`http://localhost:5000/foods/${category}/${food}.jpg`}
+          alt="음식 이미지"
         />
       </FoodImg>
       <FoodName>
         <span>'{food}'</span> 섭취 가능 여부
       </FoodName>
       <Answer>
-        <button value="O" onClick={() => onClickChoice('o')}>
+        <button value="O" onClick={() => onClickChoice('O')}>
           O
         </button>
         <button value="△" onClick={() => onClickChoice('△')}>
           <span>△</span>
         </button>
-        <button value="X" onClick={() => onClickChoice('x')}>
+        <button value="X" onClick={() => onClickChoice('X')}>
           X
         </button>
       </Answer>

@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
+// 페이지 전체를 감싸는 스타일드 컴포넌트
 const Page = styled.div`
   max-width: 500px;
   margin: 50px auto;
 `;
 
+// 페이지 제목을 표시하는 스타일드 컴포넌트
 const Title = styled.div`
   margin-top: 50px;
   font-size: 26px;
@@ -16,11 +18,13 @@ const Title = styled.div`
   text-align: center;
 `;
 
+// 컨텐츠를 감싸는 스타일드 컴포넌트
 const Content = styled.div`
   flex: 1;
   margin: 0 30px;
 `;
 
+// 입력 필드 제목을 표시하는 스타일드 컴포넌트
 const InputTitle = styled.div`
   margin-top: 30px;
   font-size: 12px;
@@ -28,10 +32,7 @@ const InputTitle = styled.div`
   color: navy;
 `;
 
-const Explain = styled.span`
-  color: red;
-`;
-
+// 필드 입력을 감싸는 스타일드 컴포넌트
 const InputWrap = styled.div`
   display: flex;
   border-radius: 8px;
@@ -44,6 +45,7 @@ const InputWrap = styled.div`
   }
 `;
 
+// 입력 필드 스타일을 지정하는 스타일드 컴포넌트
 const Input = styled.input`
   width: 100%;
   outline: none;
@@ -56,12 +58,14 @@ const Input = styled.input`
   }
 `;
 
+// 오류 메시지를 표시하는 스타일드 컴포넌트
 const ErrorMessage = styled.div`
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
 `;
 
+// 확인 버튼 스타일을 지정하는 스타일드 컴포넌트
 const BottomButton = styled.button`
   width: 100%;
   height: 48px;
@@ -80,22 +84,26 @@ const BottomButton = styled.button`
 `;
 
 function SignUpPage() {
+  // 상태 변수 선언 및 초기화
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
   const [petName, setPetName] = useState('');
   const [breed, setBreed] = useState('');
 
+  // 입력값의 유효성 검사를 위한 상태 변수 선언 및 초기화
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(false);
   const [breedValid, setBreedValid] = useState(true);
 
+  // 아이디 입력 핸들러
   const handleId = (e) => {
     setId(e.target.value);
     const regex = /^[a-zA-Z0-9]{8,}$/;
     setIdValid(regex.test(e.target.value));
   };
 
+  // 비밀번호 입력 핸들러
   const handlePassword = (e) => {
     setPw(e.target.value);
     const regex =
@@ -103,19 +111,24 @@ function SignUpPage() {
     setPwValid(regex.test(e.target.value));
   };
 
+  // 애완동물명 입력 핸들러
   const handlePetName = (e) => {
     setPetName(e.target.value);
   };
 
+  // 품종 입력 핸들러
   const handleBreed = (e) => {
     setBreed(e.target.value);
   };
 
+  // 아이디와 비밀번호의 유효성 상태 변화 감지
   useEffect(() => {
     setNotAllow(!(idValid && pwValid));
   }, [idValid, pwValid]);
 
   const navigate = useNavigate();
+
+  // 확인 버튼 클릭 핸들러
   const onClickConfirmButton = () => {
     const userInfo = {
       id: id,
@@ -124,9 +137,12 @@ function SignUpPage() {
       breed: breed,
     };
 
+    // 품종 유효성 검사를 위해 서버로 요청
     Axios.post('/api/breed', userInfo).then((response) => {
       if (response.data.success) {
         setBreedValid(true);
+
+        // 회원가입 요청
         Axios.post('/api/register', userInfo).then((response) => {
           if (response.data.success) {
             alert('회원가입에 성공하였습니다.');
@@ -139,6 +155,7 @@ function SignUpPage() {
     });
   };
 
+  // 엔터 키 입력 핸들러
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !notAllow) {
       onClickConfirmButton();
