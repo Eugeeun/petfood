@@ -37,7 +37,7 @@ const FoodImg = styled.div`
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 20px;
-  img{
+  img {
     width: 100%;
     height: 100%;
   }
@@ -106,19 +106,12 @@ function GamePage() {
     }
   }, [species]);
 
-  //select 박스에서 반려동물 종를 선택하고 species에 저장
-  const handleSelectChange = (e) => {
-    setSpecies(e.target.value);
+  const handleSelectChange = (event) => {
+    setSpecies(event.target.value);
   };
 
-  const onClickChoice_O = (e) => {
-    submitAnswer('o');
-  };
-  const onClickChoice_Tri = () => {
-    submitAnswer('△');
-  };
-  const onClickChoice_X = () => {
-    submitAnswer('x');
+  const onClickChoice = (answer) => {
+    submitAnswer(answer);
   };
 
   const submitAnswer = (answer) => {
@@ -144,7 +137,7 @@ function GamePage() {
       if (response.data.success) {
         const nextFood = response.data.rows[0];
         if (nextFood.food_name === food) {
-          loadNextQuestion(); // 값이 이전 문제의 값과 똑같다면 다시 함수 호출
+          loadNextQuestion();
         } else {
           setFood(nextFood.food_name);
           setCategory(nextFood.category);
@@ -161,9 +154,8 @@ function GamePage() {
         <img src="/image/quizbanner.png" alt="배너" />
       </TitleWrap>
       <ChoiceSpeice>
-        {' '}
-        반려동물 종 선택 : &nbsp;
-        <select onChange={handleSelectChange}>
+        반려동물 종 선택: &nbsp;
+        <select value={species} onChange={handleSelectChange}>
           <option>개</option>
           <option>고양이</option>
         </select>
@@ -173,19 +165,18 @@ function GamePage() {
           src={`http://localhost:5000/foods/${category}/${food}.jpg `}
           alt="배너"
         />
-        
       </FoodImg>
       <FoodName>
         <span>'{food}'</span> 섭취 가능 여부
       </FoodName>
       <Answer>
-        <button value="O" onClick={onClickChoice_O}>
+        <button value="O" onClick={() => onClickChoice('o')}>
           O
         </button>
-        <button value="△" onClick={onClickChoice_Tri}>
+        <button value="△" onClick={() => onClickChoice('△')}>
           <span>△</span>
         </button>
-        <button value="X" onClick={onClickChoice_X}>
+        <button value="X" onClick={() => onClickChoice('x')}>
           X
         </button>
       </Answer>
