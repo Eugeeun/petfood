@@ -120,9 +120,7 @@ function MainPage() {
   const [species, setSpecies] = useState('');
   const [breed, setBreed] = useState('');
   const [foodName, setFoodName] = useState('');
-
-  //제출 버튼 입력하려면 종, 음식명 필수로 입력할 수 있게끔 스테이트값 반환
-  const [notAllow, setNotAllow] = useState(false);
+  const [notAllow, setNotAllow] = useState(true);
   const [result, setResult] = useState('');
 
   const handlespeciesChange = (event) => {
@@ -137,18 +135,12 @@ function MainPage() {
     setFoodName(event.target.value);
   };
 
-  //입력이 되어야 버튼 활성화!
   useEffect(() => {
-    if (species.length > 0 && foodName.length > 0) {
-      setNotAllow(false);
-    } else {
-      setNotAllow(true);
-    }
+    setNotAllow(!(species.length > 0 && foodName.length > 0));
 
-    const userId = { id: localStorage.getItem('id') };
-    if (userId.id) {
-      // 로그인된 유저가 존재하면 그 유저가 등록한 애완동물 정보를 받아옴
-      Axios.post('/api/petinfo', userId).then((response) => {
+    const userId = localStorage.getItem('id');
+    if (userId) {
+      Axios.post('/api/petinfo', { id: userId }).then((response) => {
         if (response.data.success) {
           const petData = response.data.rows[0];
           setBreed(petData.breed);
@@ -158,18 +150,15 @@ function MainPage() {
     }
   }, [species, foodName]);
 
-  const onClickButton = () => {};
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     const searchData = {
       species: species,
       foodName: foodName,
     };
 
     Axios.post('/api/edibility', searchData).then((response) => {
-      // 종과 음식명이 존재한다면 그 결과값을 설정해줌
       if (!response.data.success) {
         setResult('알 수 없는 음식 또는 존재하지 않는 품종');
         return;
@@ -217,11 +206,7 @@ function MainPage() {
 
           <FormGroup>
             <label></label>
-            <SubmitButton
-              onClick={onClickButton}
-              type="submit"
-              disabled={notAllow}
-            >
+            <SubmitButton type="submit" disabled={notAllow}>
               제출
             </SubmitButton>
           </FormGroup>
