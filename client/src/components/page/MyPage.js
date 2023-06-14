@@ -89,6 +89,7 @@ function MyPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // 페이지 로드 시 유저 정보 가져오기
     const userId = { id: localStorage.getItem('id') };
     if (userId.id) {
       Axios.post('/api/userinfo', userId).then((response) => {
@@ -102,10 +103,12 @@ function MyPage() {
   }, []);
 
   useEffect(() => {
+    // 비밀번호 유효성 확인 후 제출 버튼 활성화 여부 설정
     setNotAllow(!pwValid);
   }, [pwValid]);
 
   const handlePwChange = (event) => {
+    // 비밀번호 입력 값 변경 시 상태 업데이트 및 유효성 검사
     setPw(event.target.value);
     const regex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
@@ -113,10 +116,12 @@ function MyPage() {
   };
 
   const handlePetNameChange = (event) => {
+    // 동물 이름 변경 시 상태 업데이트
     setPetName(event.target.value);
   };
 
   const handleBreedChange = (event) => {
+    // 품종 변경 시 상태 업데이트
     setBreed(event.target.value);
   };
 
