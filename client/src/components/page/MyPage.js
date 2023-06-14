@@ -73,7 +73,7 @@ const BottomButton = styled.button`
   }
 `;
 
-const ErrorMessageWrap = styled.div`
+const ErrorMessage = styled.div`
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
@@ -91,7 +91,6 @@ function MyPage() {
   useEffect(() => {
     const userId = { id: localStorage.getItem('id') };
     if (userId.id) {
-      // 로그인된 유저가 존재하면 그 유저가 등록한 정보를 불러옴
       Axios.post('/api/userinfo', userId).then((response) => {
         if (response.data.success) {
           const UserData = response.data.rows[0];
@@ -103,23 +102,14 @@ function MyPage() {
   }, []);
 
   useEffect(() => {
-    if (pwValid) {
-      setNotAllow(false);
-    } else {
-      setNotAllow(true);
-    }
+    setNotAllow(!pwValid);
   }, [pwValid]);
 
   const handlePwChange = (event) => {
     setPw(event.target.value);
     const regex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/])[a-zA-Z\d!@#$%^&*()_+~`\-={}[\]:;"'<>,.?/]{8,}$/;
-    if (regex.test(event.target.value)) {
-      // 입력된 값이 패턴에 맞는지 검사
-      setPwValid(true);
-    } else {
-      setPwValid(false);
-    }
+    setPwValid(regex.test(event.target.value));
   };
 
   const handlePetNameChange = (event) => {
@@ -130,10 +120,8 @@ function MyPage() {
     setBreed(event.target.value);
   };
 
-  //임시 코드
   const handleSubmit = (event) => {
     event.preventDefault();
-    // 정보 업데이트 API 호출
 
     const userInfo = {
       id: localStorage.getItem('id'),
@@ -142,7 +130,6 @@ function MyPage() {
       breed: breed,
     };
 
-    // 존재하는 품종명인지 확인을 먼저 한 후에 정보를 수정
     Axios.post('/api/breed', userInfo).then((response) => {
       if (response.data.success) {
         Axios.post('/api/updateuserinfo', userInfo);
@@ -169,11 +156,11 @@ function MyPage() {
               onChange={handlePwChange}
             />
           </InputWrap>
-          <ErrorMessageWrap>
+          <ErrorMessage>
             {!pwValid && pw.length > 0 && (
               <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요</div>
             )}
-          </ErrorMessageWrap>
+          </ErrorMessage>
         </Label>
         <Label>
           <InputTitle>동물 이름</InputTitle>
@@ -186,11 +173,11 @@ function MyPage() {
           <InputWrap>
             <Input type="text" value={breed} onChange={handleBreedChange} />
           </InputWrap>
-          <ErrorMessageWrap>
+          <ErrorMessage>
             {!breedValid && breed.length > 0 && (
               <div>존재하지 않는 품종입니다</div>
             )}
-          </ErrorMessageWrap>
+          </ErrorMessage>
         </Label>
         <BottomButton type="submit" disabled={notAllow}>
           정보 업데이트
