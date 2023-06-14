@@ -1,119 +1,155 @@
-const express = require('express'); // node.js 프레임워크인 express 사용
+const express = require('express');
 const app = express();
-const PORT = 5000; // 5000번 포트로 서버를 열 것임
+const PORT = 5000;
 const { connect } = require('./connect');
 
-app.use(express.json()); // body-parser라는 것인데 josn형태의 데이터를 받으면 request.body로 접근가능
-app.use(express.urlencoded({ extended: true })); // 데이터의 형태가 url-encoded면 request.body로 접근가능
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/foods', express.static('foods'));
 
+// 회원 가입 API
 app.post('/api/register', (req, res) => {
-  // 유저 정보를 DB에 저장
-  const userInfo = `insert into user values ('${req.body.id}','${req.body.password}');`;
-  connect.query(userInfo, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-  });
+  const { id, password, breed, petName } = req.body;
 
-  // 애완동물 정보를 DB에 저장
-  const petInfo = `insert into pet values ('${req.body.id}','${req.body.breed}','${req.body.petName}');`;
-  connect.query(petInfo, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-    else res.json({ success: true });
+  const userInfoQuery = `INSERT INTO user VALUES ('${id}', '${password}');`;
+  const petInfoQuery = `INSERT INTO pet VALUES ('${id}', '${breed}', '${petName}');`;
+
+  connect.query(userInfoQuery, (err, rows, fields) => {
+    if (err) return res.json({ success: false });
+
+    connect.query(petInfoQuery, (err, rows, fields) => {
+      if (err) return res.json({ success: false });
+
+      res.json({ success: true });
+    });
   });
 });
 
+// 품종 확인 API
 app.post('/api/breed', (req, res) => {
-  // 품종명 존재 확인
-  const animals = `select * from specie where breed = '${req.body.breed}';`;
-  connect.query(animals, (err, rows, fields) => {
-    if (err || rows.length === 0) res.json({ success: false });
-    else res.json({ success: true });
+  const { breed } = req.body;
+
+  const breedQuery = `SELECT * FROM specie WHERE breed = '${breed}';`;
+
+  connect.query(breedQuery, (err, rows, fields) => {
+    if (err || rows.length === 0) return res.json({ success: false });
+
+    res.json({ success: true });
   });
 });
 
+// 로그인 API
 app.post('/api/login', (req, res) => {
-  // 아이디와 비밀번호가 일치하는지 확인
-  const userInfo = `select * from user where user_id = '${req.body.id}' and password = '${req.body.password}';`;
-  connect.query(userInfo, (err, rows, fields) => {
-    if (err || rows.length === 0) res.json({ success: false });
-    else res.json({ success: true });
+  const { id, password } = req.body;
+
+  const loginQuery = `SELECT * FROM user WHERE user_id = '${id}' AND password = '${password}';`;
+
+  connect.query(loginQuery, (err, rows, fields) => {
+    if (err || rows.length === 0) return res.json({ success: false });
+
+    res.json({ success: true });
   });
 });
 
+// 애완동물 정보 조회 API
 app.post('/api/petinfo', (req, res) => {
-  // 하위 질의문을 통해서 id를 가지고 애완동물의 품종을 찾고 그 품종의 종을 찾아서 반환
-  const userId = `select breed, species from specie where breed = (select breed from pet where user_id = '${req.body.id}');`;
-  connect.query(userId, (err, rows, fields) => {
-    if (err || rows.length === 0) res.json({ success: false });
-    else res.json({ success: true, rows });
+  const { id } = req.body;
+
+  const petInfoQuery = `SELECT breed, species FROM specie WHERE breed = (SELECT breed FROM pet WHERE user_id = '${id}');`;
+
+  connect.query(petInfoQuery, (err, rows, fields) => {
+    if (err || rows.length === 0) return res.json({ success: false });
+
+    res.json({ success: true, rows });
   });
 });
 
+// 섭취 가능 여부 확인 API
 app.post('/api/edibility', (req, res) => {
-  // 품종과 음식명이 같으면 섭취가능여부를 반환
-  const edibility = `select is_edibility from edibility where species = '${req.body.species}' and food_name = '${req.body.foodName}';`;
-  connect.query(edibility, (err, rows, fields) => {
-    if (err || rows.length === 0) res.json({ success: false });
-    else {
-      // 섭취여부를 판단하여 변수 설정
-      let isEdibility = null;
-      if (rows[0].is_edibility === 'o') isEdibility = '무해함';
-      else if (rows[0].is_edibility === 'x') isEdibility = '유해함';
-      else isEdibility = '적당량만 급여';
+  const { species, foodName } = req.body;
 
-      res.json({ success: true, isEdibility: isEdibility });
-    }
+  const edibilityQuery = `SELECT is_edibility FROM edibility WHERE species = '${species}' AND food_name = '${foodName}';`;
+
+  connect.query(edibilityQuery, (err, rows, fields) => {
+    if (err || rows.length === 0) return res.json({ success: false });
+
+    let isEdibility = null;
+    if (rows[0].is_edibility === 'o') isEdibility = '무해함';
+    else if (rows[0].is_edibility === 'x') isEdibility = '유해함';
+    else isEdibility = '적당량만 급여';
+
+    res.json({ success: true, isEdibility });
   });
 });
 
+// 유저 정보 조회 API
 app.post('/api/userinfo', (req, res) => {
-  // id를 가지고 애완동물의 이름과 품종명을 가져옴
-  const userInfo = `select breed, pet_name from pet where user_id = '${req.body.id}';`;
-  connect.query(userInfo, (err, rows, fields) => {
-    if (err || rows.length === 0) res.json({ success: false });
-    else res.json({ success: true, rows });
+  const { id } = req.body;
+
+  const userInfoQuery = `SELECT breed, pet_name FROM pet WHERE user_id = '${id}';`;
+
+  connect.query(userInfoQuery, (err, rows, fields) => {
+    if (err || rows.length === 0) return res.json({ success: false });
+
+    res.json({ success: true, rows });
   });
 });
 
+// 애완동물 정보 수정 API
 app.post('/api/updatepetinfo', (req, res) => {
-  // 펫 정보를 클라이언트에서 준 정보대로 수정
-  const petInfo = `update pet set breed = '${req.body.breed}' , pet_name = '${req.body.petName}' where user_id = '${req.body.id}';`;
-  connect.query(petInfo, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-    else res.json({ success: true });
+  const { id, breed, petName } = req.body;
+
+  const updatePetInfoQuery = `UPDATE pet SET breed = '${breed}', pet_name = '${petName}' WHERE user_id = '${id}';`;
+
+  connect.query(updatePetInfoQuery, (err, rows, fields) => {
+    if (err) return res.json({ success: false });
+
+    res.json({ success: true });
   });
 });
 
+// 유저 정보 수정 API
 app.post('/api/updateuserinfo', (req, res) => {
-  // 유저 정보를 클라이언트에서 준 정보대로 수정
-  const userInfo = `update user set password = '${req.body.password}' where user_id = '${req.body.id}'`;
-  connect.query(userInfo, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-    else res.json({ success: true });
+  const { id, password } = req.body;
+
+  const updateUserInfoQuery = `UPDATE user SET password = '${password}' WHERE user_id = '${id}';`;
+
+  connect.query(updateUserInfoQuery, (err, rows, fields) => {
+    if (err) return res.json({ success: false });
+
+    res.json({ success: true });
   });
 });
 
+// 랜덤 음식 조회 API
 app.get('/api/randomfood', (req, res) => {
-  // DB에서 음식의 종류 중 하나를 가져옴
-  const randomFood = `select * from food order by rand() limit 1;`;
-  connect.query(randomFood, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-    else res.json({ success: true, rows });
+  const randomFoodQuery = `SELECT * FROM food ORDER BY RAND() LIMIT 1;`;
+
+  connect.query(randomFoodQuery, (err, rows, fields) => {
+    if (err) return res.json({ success: false });
+
+    res.json({ success: true, rows });
   });
 });
 
+// 정답 확인 API
 app.post('/api/answercheck', (req, res) => {
-  // 종과 음식과 정답이 맞는지 확인
-  const edibility = `select is_edibility from edibility where food_name = '${req.body.foodName}' and species = '${req.body.species}';`;
-  connect.query(edibility, (err, rows, fields) => {
-    if (err) res.json({ success: false });
-    else if (rows[0].is_edibility !== req.body.answer)
-      res.json({
+  const { foodName, species, answer } = req.body;
+
+  const answerCheckQuery = `SELECT is_edibility FROM edibility WHERE food_name = '${foodName}' AND species = '${species}';`;
+
+  connect.query(answerCheckQuery, (err, rows, fields) => {
+    if (err) return res.json({ success: false });
+
+    if (rows[0].is_edibility !== answer) {
+      return res.json({
         success: true,
         correct: false,
         answer: rows[0].is_edibility,
       });
-    else res.json({ success: true, correct: true });
+    }
+
+    res.json({ success: true, correct: true });
   });
 });
 
