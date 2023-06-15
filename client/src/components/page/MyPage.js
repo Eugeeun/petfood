@@ -80,12 +80,12 @@ const ErrorMessage = styled.div`
 `;
 
 function MyPage() {
-  const [pw, setPw] = useState('');
-  const [pwValid, setPwValid] = useState(false);
-  const [notAllow, setNotAllow] = useState(false);
-  const [petName, setPetName] = useState('');
-  const [breed, setBreed] = useState('');
-  const [breedValid, setBreedValid] = useState(true);
+  const [pw, setPw] = useState(''); // 비밀번호 상태 관리
+  const [pwValid, setPwValid] = useState(false); // 비밀번호 유효성 상태 관리
+  const [notAllow, setNotAllow] = useState(false); // 제출 버튼 활성화 상태 관리
+  const [petName, setPetName] = useState(''); // 반려동물 이름 상태 관리
+  const [breed, setBreed] = useState(''); // 품종 상태 관리
+  const [breedValid, setBreedValid] = useState(true); // 품종 유효성 상태 관리
   const navigate = useNavigate();
 
   useEffect(() => {
