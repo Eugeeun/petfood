@@ -126,11 +126,11 @@ const BannerImg = styled.img`
 `;
 
 function MainPage() {
-  const [species, setSpecies] = useState('');
-  const [breed, setBreed] = useState('');
-  const [foodName, setFoodName] = useState('');
-  const [notAllow, setNotAllow] = useState(true);
-  const [result, setResult] = useState('');
+  const [species, setSpecies] = useState(''); // 반려동물 종 상태 관리
+  const [breed, setBreed] = useState(''); // 품종 상태 관리
+  const [foodName, setFoodName] = useState(''); // 음식명 상태 관리
+  const [notAllow, setNotAllow] = useState(true); // 제출 버튼 활성화 상태 관리
+  const [result, setResult] = useState(''); // 검색 결과 상태 관리
 
   // 종 변경 핸들러
   const handleSpeciesChange = (event) => {
